@@ -26,20 +26,20 @@ void fillArray(vector<T> &buffer, T value) {
   }
 }
 template <typename T>
-void fillArray(vector<T> &buffer, const vector<T>& pattern) {
+void fillArray(vector<T> &buffer, const vector<T> &pattern) {
   for (size_t i = 0, e = buffer.size(); i < e; ++i) {
     buffer[i] = pattern[i % pattern.size()];
   }
 }
 
-
-void runKernel(void *aDevice, void *bDevice, void *cDevice, const char *filename) {
+void runKernel(void *aDevice, void *bDevice, void *cDevice,
+               const char *filename) {
   hipModule_t Module;
   hipFunction_t Function;
   HIP_CHECK(hipModuleLoad(&Module, filename));
-  HIP_CHECK(hipModuleGetFunction(
-      &Function, Module,
-      "test_dispatch_0_conv_2d_ngchw_gfchw_q_1x2x1x1x1x8x3x3_i8xi8xi32xi32xi32"));
+  HIP_CHECK(hipModuleGetFunction(&Function, Module,
+                                 "test_dispatch_0_conv_2d_ngchw_gfchw_q_"
+                                 "1x2x1x1x1x8x3x3_i8xi8xi32xi32xi32"));
 
   struct {
     void *a;
@@ -76,8 +76,9 @@ vector<T> slurpFromDevice(void *deviceBuf, size_t length) {
   return ret;
 }
 
-bool isCorrect(const vector<int32_t>& c) {
-  return std::all_of(c.begin(), c.end(), [](int32_t e) { return e == (1 + 2 + 1) * 3 * 8 ; });
+bool isCorrect(const vector<int32_t> &c) {
+  return std::all_of(c.begin(), c.end(),
+                     [](int32_t e) { return e == (1 + 2 + 1) * 3 * 8; });
 }
 
 bool test(const char *filename) {
