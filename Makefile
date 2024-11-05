@@ -17,20 +17,23 @@ HIP_CXXFLAGS := $(shell hipconfig -C)
 CXXFLAGS += -std=c++17 -Wall -Wextra -O2 -g ${HIP_CXXFLAGS}
 LDFLAGS += -L${ROCM_ROOT}/lib -lamdhip64 -Wl,-rpath=${ROCM_ROOT}/lib
 
-tests = O3.hsaco O3-no-assumes.hsaco O3-global-isel.hsaco
+tests = O3.hsaco O3-original.hsaco O3-global-isel.hsaco O3-no-workitems-y-z.hsaco
 
 all: driver ${tests}
 
 test: all
 	./driver ./O3-global-isel.hsaco
-	./driver ./O3-no-assumes.hsaco
+	./driver ./O3-no-workitems-y-z.hsaco
 	-./driver ./O3.hsaco
+	-./driver ./O3-original.hsaco
 
-O3.s: original-ir.ll
+O3.s: reduced-input-with-adds.ll
 	${LLC} ${LLCFLAGS} -O3 -o $@ $^
-O3-no-assumes.s: reduced-input.ll
+O3-original.s: original-ir.ll
 	${LLC} ${LLCFLAGS} -O3 -o $@ $^
-O3-global-isel.s: original-ir.ll
+O3-no-workitems-y-z.s: reduced-input.ll
+	${LLC} ${LLCFLAGS} -O3 -o $@ $^
+O3-global-isel.s: reduced-input-with-adds.ll
 	${LLC} ${LLCFLAGS} -global-isel=1 -O3 -o $@ $^
 
 

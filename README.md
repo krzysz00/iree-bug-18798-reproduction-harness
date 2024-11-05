@@ -17,7 +17,9 @@ will run the tests
 ## Files
 
 - `original-ir.ll` is the IR from the LLVM ticket
-- `input.ll` is an attempt to remove "unneeded" (the assume_alignment stuff and workitems y and z) code from the IR that makes it work by some miracle
+- `reduced-input.ll` is an attempt to remove "unneeded" (the assume_alignment stuff and workitems y and z) code from the IR that makes it work by some miracle
+- `reduced-input-with-adds.ll` is the original IR without the `memref.assume` stuff
+but with adding workitem IDs y and z. It also fails.
 - `driver.cpp` is the test program
 - `anonymize-regs.pl` is a script that might make it easier to read `.s` diffs by erasing register numbers
 
