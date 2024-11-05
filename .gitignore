@@ -1,0 +1,7 @@
+compile_commands.json
+*.o
+*.s
+*.hsaco
+driver
+/.ccls-cache
+.cache
